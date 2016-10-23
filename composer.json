@@ -1,5 +1,5 @@
 {
-  "name": "humweb/tags-module",
+  "name": "humweb/modules",
   "type": "module",
   "license": "MIT",
   "authors": [
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Humweb\\Tags": "src/"
+      "Humweb\\Modules\\": "src/"
     }
   },
   "autoload-dev": {
