@@ -2,7 +2,7 @@
 
 namespace Humweb\Modules;
 
-use Composer\Script\Event;
+use Composer\Installer\PackageEvent;
 
 /**
  * ComposerHooks
@@ -11,17 +11,11 @@ use Composer\Script\Event;
  */
 class ComposerHooks
 {
-    public static function scanModules(Event $event)
+    public static function scanPackageForModules(PackageEvent $event)
     {
         // Get all installed packages
-        $packages            = $event->getComposer()->getRepositoryManager()->getLocalRepository()->getPackages();
-        $installationManager = $event->getComposer()->getInstallationManager();
-        $installPath         = [];
-
-        foreach ($packages as $package) {
-            $installPath[] = $installationManager->getInstallPath($package);
-            //do my process here
-        }
-        var_dump($installPath);
+        $package = $event->getOperation()->getPackage();
+        $path    = $event->getComposer()->getInstallationManager()->getInstallPath($package);
+        var_dump($path);
     }
 }
