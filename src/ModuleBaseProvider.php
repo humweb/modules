@@ -75,7 +75,7 @@ class ModuleBaseProvider extends ServiceProvider
      */
     public function getResourcePath($path = '', $extra = '')
     {
-        return $this->getBasePath().'/../resources/'.trim($path, '/').'/'.$extra;
+        return $this->getBasePath().'/resources/'.trim($path, '/').'/'.$extra;
     }
 
 
