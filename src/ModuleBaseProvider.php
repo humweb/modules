@@ -119,6 +119,19 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
+     * Get path to config files
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getConfigPath($path = '')
+    {
+        return $this->getResourcePath('config', $path);
+    }
+
+
+    /**
      * Load language
      */
     public function loadLang()
@@ -127,13 +140,32 @@ class ModuleBaseProvider extends ServiceProvider
     }
 
 
-
     /**
      * Load view
      */
     public function loadViews()
     {
         $this->loadViewsFrom($this->getViewsPath(), $this->moduleMeta['slug']);
+    }
+
+
+    public function publishConfig($config = null)
+    {
+        if (is_array($config)) {
+            foreach ($config as $input => $output) {
+                $this->publishes([
+                    $this->getConfigPath($input) => config_path($output),
+                ]);
+            }
+        } elseif (is_string($config)) {
+            $this->publishes([
+                $this->getConfigPath($config) => config_path($this->moduleMeta['slug'].'.php'),
+            ]);
+        } else {
+            $this->publishes([
+                $this->getConfigPath('config.php') => config_path($this->moduleMeta['slug'].'.php'),
+            ]);
+        }
     }
 
 
