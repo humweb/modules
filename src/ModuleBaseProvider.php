@@ -58,9 +58,8 @@ class ModuleBaseProvider extends ServiceProvider
     {
         if (is_null($this->basePath)) {
             $moduleClass    = new ReflectionClass($this);
-            $this->basePath = dirname($moduleClass->getFilename());
+            $this->basePath = realpath(dirname($moduleClass->getFilename()).'/../');
         }
-
         return $this->basePath;
     }
 
@@ -210,5 +209,16 @@ class ModuleBaseProvider extends ServiceProvider
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+
+    /**
+     * Register Service Provider
+     *
+     * @param $provider
+     */
+    public function registerProvider($provider)
+    {
+        $this->app->register($provider);
     }
 }
