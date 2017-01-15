@@ -9,7 +9,7 @@ class ModuleServiceProvider extends ModuleBaseProvider
      */
     public function boot()
     {
-        //
+
     }
 
     /**
