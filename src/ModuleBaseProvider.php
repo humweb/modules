@@ -140,6 +140,29 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
+     * Register a view file namespace.
+     *
+     * @param  string $path
+     * @param  string $namespace
+     * @param bool    $prepend
+     *
+     * @return void
+     */
+    protected function loadViewsFrom($path, $namespace, $prepend = true)
+    {
+        $appPath = $this->app['theme']->activeThemePath('modules/'.$namespace);
+        //if (is_dir($appPath = $this->app['theme']->activeThemePath('modules/'.$namespace))) {
+        $this->app['view']->addNamespace($namespace, $appPath, $prepend);
+
+        if (is_dir($appPath = $this->app->resourcePath().'/views/vendor/'.$namespace)) {
+            $this->app['view']->addNamespace($namespace, $appPath, $prepend);
+        }
+
+        $this->app['view']->addNamespace($namespace, $path, $prepend);
+
+    }
+
+    /**
      * Load view
      */
     public function loadViews()
