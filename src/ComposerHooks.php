@@ -19,6 +19,17 @@ use Humweb\Core\Data\JsonFile;
  */
 class ComposerHooks
 {
+    public static function scanPackageForModules(PackageEvent $event)
+    {
+        // Get installed package
+        $package = $event->getOperation()->getPackage();
+        $path    = $event->getComposer()->getInstallationManager()->getInstallPath($package);
+        if (static::addPackage($path)) {
+            echo "Installed module: ".$package->get."\n";
+        }
+    }
+
+
     public static function addPackage($path)
     {
 
@@ -48,16 +59,5 @@ class ComposerHooks
         }
 
         return false;
-    }
-
-
-    public static function scanPackageForModules(PackageEvent $event)
-    {
-        // Get installed package
-        $package = $event->getOperation()->getPackage();
-        $path    = $event->getComposer()->getInstallationManager()->getInstallPath($package);
-        if (static::addPackage($path)) {
-            echo "Installed module: ".$package->get."\n";
-        }
     }
 }

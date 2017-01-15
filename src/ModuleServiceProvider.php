@@ -9,8 +9,8 @@ class ModuleServiceProvider extends ModuleBaseProvider
      */
     public function boot()
     {
-
     }
+
 
     /**
      * Register any application services.

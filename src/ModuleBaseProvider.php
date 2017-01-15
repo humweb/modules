@@ -50,17 +50,24 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
-     * Get base path of module
+     * Load language
+     */
+    public function loadLang()
+    {
+        $this->loadTranslationsFrom($this->getLangPath(), $this->moduleMeta['slug']);
+    }
+
+
+    /**
+     * Get path to language files
+     *
+     * @param string $path
      *
      * @return string
      */
-    public function getBasePath()
+    public function getLangPath($path = '')
     {
-        if (is_null($this->basePath)) {
-            $moduleClass    = new ReflectionClass($this);
-            $this->basePath = realpath(dirname($moduleClass->getFilename()).'/../');
-        }
-        return $this->basePath;
+        return $this->getResourcePath('lang', $path);
     }
 
 
@@ -79,63 +86,27 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
-     * Get path to views
-     *
-     * @param string $path
+     * Get base path of module
      *
      * @return string
      */
-    public function getViewsPath($path = '')
+    public function getBasePath()
     {
-        return $this->getResourcePath('views', $path);
+        if (is_null($this->basePath)) {
+            $moduleClass    = new ReflectionClass($this);
+            $this->basePath = realpath(dirname($moduleClass->getFilename()).'/../');
+        }
+
+        return $this->basePath;
     }
 
 
     /**
-     * Get path to assets
-     *
-     * @param string $path
-     *
-     * @return string
+     * Load view
      */
-    public function getAssetsPath($path = '')
+    public function loadViews()
     {
-        return $this->getResourcePath('assets', $path);
-    }
-
-
-    /**
-     * Get path to language files
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    public function getLangPath($path = '')
-    {
-        return $this->getResourcePath('lang', $path);
-    }
-
-
-    /**
-     * Get path to config files
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    public function getConfigPath($path = '')
-    {
-        return $this->getResourcePath('config', $path);
-    }
-
-
-    /**
-     * Load language
-     */
-    public function loadLang()
-    {
-        $this->loadTranslationsFrom($this->getLangPath(), $this->moduleMeta['slug']);
+        $this->loadViewsFrom($this->getViewsPath(), $this->moduleMeta['slug']);
     }
 
 
@@ -160,15 +131,19 @@ class ModuleBaseProvider extends ServiceProvider
         }
 
         $this->app['view']->addNamespace($namespace, $path);
-
     }
 
+
     /**
-     * Load view
+     * Get path to views
+     *
+     * @param string $path
+     *
+     * @return string
      */
-    public function loadViews()
+    public function getViewsPath($path = '')
     {
-        $this->loadViewsFrom($this->getViewsPath(), $this->moduleMeta['slug']);
+        return $this->getResourcePath('views', $path);
     }
 
 
@@ -193,6 +168,19 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
+     * Get path to config files
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getConfigPath($path = '')
+    {
+        return $this->getResourcePath('config', $path);
+    }
+
+
+    /**
      * Publish views
      */
     public function publishViews()
@@ -211,6 +199,19 @@ class ModuleBaseProvider extends ServiceProvider
         $this->publishes([
             $this->getAssetsPath() => public_path('vendor/'.$this->moduleMeta['slug']),
         ], 'public');
+    }
+
+
+    /**
+     * Get path to assets
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getAssetsPath($path = '')
+    {
+        return $this->getResourcePath('assets', $path);
     }
 
 

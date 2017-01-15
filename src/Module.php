@@ -9,8 +9,9 @@ use Illuminate\Support\Collection;
  */
 class Module extends Collection
 {
-    protected $adminMenus = [];
+    protected $adminMenus           = [];
     protected $availablePermissions = [];
+
 
     public function getAdminMenus()
     {
@@ -25,12 +26,31 @@ class Module extends Collection
 
             // Remove unused
             foreach ($this->adminMenus as $k => $v) {
-                if (empty($v['children'])) unset($this->adminMenus[$k]);
+                if (empty($v['children'])) {
+                    unset($this->adminMenus[$k]);
+                }
             }
         }
 
         return $this->adminMenus;
     }
+
+
+    /**
+     * @param $module
+     */
+    protected function importAdminMenus($module)
+    {
+        if (method_exists($module, 'getAdminMenu')) {
+            foreach ($module->getAdminMenu() as $key => $menu) {
+                if ( ! isset($this->adminMenus[$key]['children'])) {
+                    $this->adminMenus[$key]['children'] = [];
+                }
+                $this->adminMenus[$key]['children'] = array_merge_recursive($this->adminMenus[$key]['children'], $menu);
+            }
+        }
+    }
+
 
     public function getAvailablePermissions()
     {
@@ -45,21 +65,5 @@ class Module extends Collection
         }
 
         return $this->availablePermissions;
-    }
-
-
-    /**
-     * @param $module
-     */
-    protected function importAdminMenus($module)
-    {
-        if (method_exists($module, 'getAdminMenu')) {
-            foreach ($module->getAdminMenu() as $key => $menu) {
-                if (!isset($this->adminMenus[$key]['children'])) {
-                    $this->adminMenus[$key]['children'] = [];
-                }
-                $this->adminMenus[$key]['children'] = array_merge_recursive($this->adminMenus[$key]['children'], $menu);
-            }
-        }
     }
 }

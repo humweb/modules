@@ -19,10 +19,12 @@ class ComposerHooksTest extends TestCase
         app('path')->set('storage', __DIR__.'/tmp');
     }
 
+
     /**
      * @test
      */
-    function it_finds_module_file() {
+    function it_finds_module_file()
+    {
         ComposerHooks::scanPackageForModules(__DIR__.'/stub');
     }
 
