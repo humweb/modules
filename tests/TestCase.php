@@ -1,27 +1,36 @@
 <?php
-namespace Humweb\Tests\Modules;
 
-use Orchestra\Testbench\TestCase as BaseTestCase;
-
-class TestCase extends BaseTestCase
+abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
+    /**
+     * The base URL to use while testing the application.
+     *
+     * @var string
+     */
+    protected $baseUrl    = 'http://localhost';
+    protected $runSeeders = false;
+
 
     /**
-     * Define environment setup.
+     * Creates the application.
      *
-     * @param  \Illuminate\Foundation\Application $app
-     *
-     * @return void
+     * @return \Illuminate\Foundation\Application
      */
-    //    protected function getEnvironmentSetUp($app)
-    //    {
-    //        // Setup default database to use sqlite :memory:
-    //        $app['config']->set('database.default', 'testbench');
-    //        $app['config']->set('database.connections.testbench', [
-    //            'driver'   => 'sqlite',
-    //            'database' => ':memory:',
-    //            'prefix'   => '',
-    //        ]);
-    //    }
+    public function createApplication()
+    {
+        $app = require __DIR__.'/../bootstrap/app.php';
 
+        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+        return $app;
+    }
+
+
+    public function setUp()
+    {
+        parent::setUp();
+        if ($this->runSeeders) {
+            $this->app[Illuminate\Contracts\Console\Kernel::class]->call('db:seed');
+        }
+    }
 }
