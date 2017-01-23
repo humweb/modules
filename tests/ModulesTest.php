@@ -1,4 +1,5 @@
 <?php
+namespace Humweb\Tests\Modules;
 
 use Humweb\Modules\ModuleBaseProvider;
 
