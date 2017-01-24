@@ -120,7 +120,7 @@ class ModuleBaseProvider extends ServiceProvider
      */
     protected function loadViewsFrom($path, $namespace)
     {
-        if ($this->app->has('theme')) {
+        if ($this->app->bound('theme')) {
             $appPath = $this->app['theme']->activeThemePath('views/modules/'.$namespace);
             $this->app['view']->addNamespace($namespace, $appPath);
         }
