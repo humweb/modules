@@ -50,11 +50,18 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
-     * Load language
+     * Get base path of module
+     *
+     * @return string
      */
-    public function loadLang()
+    public function getBasePath($path = '')
     {
-        $this->loadTranslationsFrom($this->getLangPath(), $this->moduleMeta['slug']);
+        if (is_null($this->basePath)) {
+            $moduleClass    = new ReflectionClass($this);
+            $this->basePath = realpath(dirname($moduleClass->getFilename()).'/../');
+        }
+
+        return $this->basePath.$this->addSeparatorIfNeeded($path);
     }
 
 
@@ -86,54 +93,6 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
-     * Get base path of module
-     *
-     * @return string
-     */
-    public function getBasePath($path = '')
-    {
-        if (is_null($this->basePath)) {
-            $moduleClass    = new ReflectionClass($this);
-            $this->basePath = realpath(dirname($moduleClass->getFilename()).'/../');
-        }
-
-        return $this->basePath.$this->addSeparatorIfNeeded($path);
-    }
-
-
-    /**
-     * Load view
-     */
-    public function loadViews()
-    {
-        $this->loadViewsFrom($this->getViewsPath(), $this->moduleMeta['slug']);
-    }
-
-
-    /**
-     * Register a view file namespace.
-     *
-     * @param  string $path
-     * @param  string $namespace
-     *
-     * @return void
-     */
-    protected function loadViewsFrom($path, $namespace)
-    {
-        if ($this->app->bound('theme')) {
-            $appPath = $this->app['theme']->activeThemePath('views/modules/'.$namespace);
-            $this->app['view']->addNamespace($namespace, $appPath);
-        }
-
-        if (is_dir($appPath = $this->app->resourcePath().'/views/vendor/'.$namespace)) {
-            $this->app['view']->addNamespace($namespace, $appPath);
-        }
-
-        $this->app['view']->addNamespace($namespace, $path);
-    }
-
-
-    /**
      * Get path to views
      *
      * @param string $path
@@ -143,6 +102,41 @@ class ModuleBaseProvider extends ServiceProvider
     public function getViewsPath($path = '')
     {
         return $this->getResourcePath('views'.$this->addSeparatorIfNeeded($path));
+    }
+
+
+    /**
+     * Get path to config files
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getConfigPath($path = '')
+    {
+        return $this->getResourcePath('config'.$this->addSeparatorIfNeeded($path));
+    }
+
+
+    /**
+     * Get path to assets
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getAssetsPath($path = '')
+    {
+        return $this->getResourcePath('assets'.$this->addSeparatorIfNeeded($path));
+    }
+
+
+    /**
+     * Load language
+     */
+    public function loadLang()
+    {
+        $this->loadTranslationsFrom($this->getLangPath(), $this->moduleMeta['slug']);
     }
 
 
@@ -167,15 +161,37 @@ class ModuleBaseProvider extends ServiceProvider
 
 
     /**
-     * Get path to config files
-     *
-     * @param string $path
-     *
-     * @return string
+     * Load view
      */
-    public function getConfigPath($path = '')
+    public function loadViews()
     {
-        return $this->getResourcePath('config'.$this->addSeparatorIfNeeded($path));
+        $this->loadViewsFrom($this->getViewsPath(), $this->moduleMeta['slug']);
+    }
+
+
+    /**
+     * Register a view file namespace.
+     *
+     * @param  string $path
+     * @param  string $namespace
+     *
+     * @return void
+     */
+    protected function loadViewsFrom($path, $namespace)
+    {
+        // Module theme override path
+        if ($this->app->bound('theme')) {
+            $themePath = $this->app['theme']->activeThemePath('views/modules/'.$namespace);
+            $this->app['view']->addNamespace($namespace, $themePath);
+        }
+
+        // Module vendor path
+        if (is_dir($vendorPath = $this->app->resourcePath().'/views/vendor/'.$namespace)) {
+            $this->app['view']->addNamespace($namespace, $vendorPath);
+        }
+
+        // Module resources/view path
+        $this->app['view']->addNamespace($namespace, $path);
     }
 
 
@@ -198,19 +214,6 @@ class ModuleBaseProvider extends ServiceProvider
         $this->publishes([
             $this->getAssetsPath() => public_path('vendor/'.$this->moduleMeta['slug']),
         ], 'public');
-    }
-
-
-    /**
-     * Get path to assets
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    public function getAssetsPath($path = '')
-    {
-        return $this->getResourcePath('assets'.$this->addSeparatorIfNeeded($path));
     }
 
 
@@ -250,5 +253,5 @@ class ModuleBaseProvider extends ServiceProvider
     protected function addSeparatorIfNeeded($path = '')
     {
         return ($path ? DIRECTORY_SEPARATOR.$path : $path);
-}
+    }
 }

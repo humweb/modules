@@ -1,4 +1,5 @@
 <?php
+
 namespace Humweb\Tests\Modules;
 
 use Humweb\Modules\ModuleBaseProvider;
@@ -11,12 +12,14 @@ class ModulesTest extends TestCase
      */
     protected $provider;
 
+
     public function setUp()
     {
         parent::setUp();
         $this->provider = new ExampleServiceProvider($this->app);
         $this->provider->boot();
     }
+
 
     /**
      * @test
@@ -26,6 +29,7 @@ class ModulesTest extends TestCase
         $this->assertEquals('Example', $this->app['modules']->getAdminMenus()['Settings']['children'][0]['label']);
     }
 
+
     /**
      * @test
      */
@@ -33,6 +37,7 @@ class ModulesTest extends TestCase
     {
         $this->assertEquals(realpath(__DIR__.'/..'), $this->provider->getBasePath());
     }
+
 
     /**
      * @test
@@ -42,6 +47,7 @@ class ModulesTest extends TestCase
         $this->assertEquals(realpath(__DIR__.'/../resources'), $this->provider->getResourcePath());
     }
 
+
     /**
      * @test
      */
@@ -49,6 +55,7 @@ class ModulesTest extends TestCase
     {
         $this->assertEquals(realpath(__DIR__.'/../resources/views'), $this->provider->getViewsPath());
     }
+
 
     /**
      * @test
@@ -58,7 +65,6 @@ class ModulesTest extends TestCase
         $this->assertEquals(realpath(__DIR__.'/../resources/lang'), $this->provider->getLangPath());
     }
 }
-
 
 class ExampleServiceProvider extends ModuleBaseProvider
 {
@@ -80,6 +86,7 @@ class ExampleServiceProvider extends ModuleBaseProvider
         'website' => '',
     ];
 
+
     /**
      * Bootstrap the application events.
      */
@@ -90,6 +97,7 @@ class ExampleServiceProvider extends ModuleBaseProvider
         $this->loadViews();
         $this->publishViews();
     }
+
 
     public function getAdminMenu()
     {
@@ -103,6 +111,7 @@ class ExampleServiceProvider extends ModuleBaseProvider
             ],
         ];
     }
+
 
     /**
      * Get the services provided by the provider.
