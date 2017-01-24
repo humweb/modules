@@ -23,7 +23,7 @@ class ModulesTest extends TestCase
      */
     public function it_builds_admin_menus()
     {
-        $this->assertEquals('Example', $this->app['modules']->getAdminMenus()['Settings']['children'][1]['label']);
+        $this->assertEquals('Example', $this->app['modules']->getAdminMenus()['Settings']['children'][0]['label']);
     }
 
     /**
@@ -31,7 +31,7 @@ class ModulesTest extends TestCase
      */
     public function it_resolves_base_module_path()
     {
-        $this->assertEquals(__DIR__, $this->provider->getBasePath());
+        $this->assertEquals(realpath(__DIR__.'/..'), $this->provider->getBasePath());
     }
 
     /**
@@ -39,7 +39,7 @@ class ModulesTest extends TestCase
      */
     public function it_resolves_modules_resource_path()
     {
-        $this->assertEquals(__DIR__.'/resources', $this->provider->getResourcePath());
+        $this->assertEquals(realpath(__DIR__.'/../resources'), $this->provider->getResourcePath());
     }
 
     /**
@@ -47,7 +47,7 @@ class ModulesTest extends TestCase
      */
     public function it_resolves_modules_views_path()
     {
-        $this->assertEquals(__DIR__.'/resources/views', $this->provider->getViewsPath());
+        $this->assertEquals(realpath(__DIR__.'/../resources/views'), $this->provider->getViewsPath());
     }
 
     /**
@@ -55,7 +55,7 @@ class ModulesTest extends TestCase
      */
     public function it_resolves_modules_lang_path()
     {
-        $this->assertEquals(__DIR__.'/resources/lang', $this->provider->getLangPath());
+        $this->assertEquals(realpath(__DIR__.'/../resources/lang'), $this->provider->getLangPath());
     }
 }
 

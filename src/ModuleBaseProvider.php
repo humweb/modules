@@ -67,7 +67,7 @@ class ModuleBaseProvider extends ServiceProvider
      */
     public function getLangPath($path = '')
     {
-        return $this->getResourcePath('lang', $path);
+        return $this->getResourcePath('lang'.$this->addSeparatorIfNeeded($path));
     }
 
 
@@ -79,9 +79,9 @@ class ModuleBaseProvider extends ServiceProvider
      *
      * @return string
      */
-    public function getResourcePath($path = '', $extra = '')
+    public function getResourcePath($path = '')
     {
-        return $this->getBasePath().'/resources/'.trim($path, '/').'/'.$extra;
+        return $this->getBasePath('resources'.$this->addSeparatorIfNeeded($path));
     }
 
 
@@ -90,14 +90,14 @@ class ModuleBaseProvider extends ServiceProvider
      *
      * @return string
      */
-    public function getBasePath()
+    public function getBasePath($path = '')
     {
         if (is_null($this->basePath)) {
             $moduleClass    = new ReflectionClass($this);
             $this->basePath = realpath(dirname($moduleClass->getFilename()).'/../');
         }
 
-        return $this->basePath;
+        return $this->basePath.$this->addSeparatorIfNeeded($path);
     }
 
 
@@ -125,7 +125,6 @@ class ModuleBaseProvider extends ServiceProvider
             $this->app['view']->addNamespace($namespace, $appPath);
         }
 
-
         if (is_dir($appPath = $this->app->resourcePath().'/views/vendor/'.$namespace)) {
             $this->app['view']->addNamespace($namespace, $appPath);
         }
@@ -143,7 +142,7 @@ class ModuleBaseProvider extends ServiceProvider
      */
     public function getViewsPath($path = '')
     {
-        return $this->getResourcePath('views', $path);
+        return $this->getResourcePath('views'.$this->addSeparatorIfNeeded($path));
     }
 
 
@@ -176,7 +175,7 @@ class ModuleBaseProvider extends ServiceProvider
      */
     public function getConfigPath($path = '')
     {
-        return $this->getResourcePath('config', $path);
+        return $this->getResourcePath('config'.$this->addSeparatorIfNeeded($path));
     }
 
 
@@ -211,7 +210,7 @@ class ModuleBaseProvider extends ServiceProvider
      */
     public function getAssetsPath($path = '')
     {
-        return $this->getResourcePath('assets', $path);
+        return $this->getResourcePath('assets'.$this->addSeparatorIfNeeded($path));
     }
 
 
@@ -246,4 +245,10 @@ class ModuleBaseProvider extends ServiceProvider
     {
         $this->app->register($provider);
     }
+
+
+    protected function addSeparatorIfNeeded($path = '')
+    {
+        return ($path ? DIRECTORY_SEPARATOR.$path : $path);
+}
 }
