@@ -217,6 +217,12 @@ class ModuleBaseProvider extends ServiceProvider
     }
 
 
+    public function loadMigrations($dir = null)
+    {
+        $this->loadMigrationsFrom($this->getResourcePath(is_null($dir) ? 'database/migrations' : $dir));
+    }
+
+
     /**
      * Get modules metadata
      *
