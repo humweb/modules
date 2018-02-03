@@ -106,7 +106,7 @@ class ExampleServiceProvider extends ModuleBaseProvider
                 [
                     'label' => 'Example',
                     'url'   => '/admin/example',
-                    'icon'  => '<i class="fa fa-home" ></i>',
+                    'icon'  => '<i class="fa fa-home"></i>',
                 ],
             ],
         ];
